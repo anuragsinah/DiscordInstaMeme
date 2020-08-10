@@ -114,4 +114,5 @@ async function startRefreshTokenPolling() {
 								},expiresIn-10000);//refresh it 10 second of expiry
 	}catch(err){
 		console.log("can not start startRefreshTokenPolling");
+	}
 }
