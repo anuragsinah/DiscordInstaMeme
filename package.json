@@ -1,0 +1,15 @@
+{
+  "name": "inta_discord",
+  "version": "1.0.0",
+  "description": "Making Discord Bot for sharing the images from the insta to discord",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Indori_Poha",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "unirest": "^0.6.0"
+  }
+}
