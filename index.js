@@ -73,40 +73,38 @@ async function startMediaPolling() {
 }
 
 async function refreshToken() {
-
 	console.log("refreshToken");
-
 	return new Promise(async (resolve,reject)=>{
 	var url = "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token="+accessTokenLongForRefreshing;
 		console.log(url);
         unirest.get(url)
-		.end(function(res) {
-				if (res.error) {
-					console.log('GET refreshToken error  -\n' +res.error ) ;
-					reject();
-				}
-				else {
-					try{
-						var body = res['body'];
-						timeIntervalForRefreshToken = body['expires_in'];
-						accessTokenLongForRefreshing = body['access_token'];
-						accessTokenLongCurrent = accessTokenLongForRefreshing;
-						resolve();
-					}
-					catch(err){
-						console.log("Error in the received refreshToken data ");
-						console.log(err);
-						reject(timeIntervalForRefreshToken);
-					}
-				}
-		});
-	});
+		    .end(function(res) {
+						if (res.error) {
+							console.log('GET refreshToken error  -\n' +res.error ) ;
+							reject();
+						}
+						else {
+							try{
+								var body = res['body'];
+								timeIntervalForRefreshToken = body['expires_in'];
+								accessTokenLongForRefreshing = body['access_token'];
+								accessTokenLongCurrent = accessTokenLongForRefreshing;
+								resolve(timeIntervalForRefreshToken);
+							}
+							catch(err){
+								console.log("Error in the received refreshToken data ");
+								console.log(err);
+								reject();
+							}
+						}
+		    });
+  	});
 }
 
 async function startRefreshTokenPolling() {
-
 	console.log("startRefreshTokenPolling");
-	refreshToken().then( expiresIn=>{
+	try{
+		var expiresIn = await refreshToken();
 		startMediaPolling();
 		console.log("New expiry time - "+expiresIn);
 		setTimerIdRefreshToken = setTimeout(function() {
@@ -114,8 +112,6 @@ async function startRefreshTokenPolling() {
 									    clearTimeout(intervalTimerIdMedia);
 											startRefreshTokenPolling();
 								},expiresIn-10000);//refresh it 10 second of expiry
-	})
-	.catch(rej=>{
+	}catch(err){
 		console.log("can not start startRefreshTokenPolling");
-	});
 }
