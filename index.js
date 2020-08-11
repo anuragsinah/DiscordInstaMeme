@@ -58,7 +58,7 @@ async function startMediaPolling() {
 																.setImage(body['data'][i]['media_url'])
 																.setURL(body['data'][i]['permalink']);
 											client.channels.cache.get(process.env.channedID).send(exampleEmbed);
-
+											break;////as we don't want to spam on the channel
 								 	}
 									 if (body['data'][i]['media_type']=== "VIDEO") {
 										console.log('New data VIDEO- caption'+body['data'][i]['caption']);
