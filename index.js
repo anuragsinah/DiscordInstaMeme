@@ -33,7 +33,7 @@ async function startMediaPolling() {
 
 	console.log('startMediaPolling') ;
 	intervalTimerIdMedia = setInterval(function() {
-        var url = "https://graph.instagram.com/me/media?fields=media_url,caption,timestamp,media_type&"+"access_token="+accessTokenLongCurrent;
+        var url = "https://graph.instagram.com/me/media?fields=media_url,caption,timestamp,media_type,id,permalink,thumbnail_url&"+"access_token="+accessTokenLongCurrent;
         unirest.get(url)
 				.end(function(res) {
 				if (res.error) {
@@ -46,19 +46,29 @@ async function startMediaPolling() {
 						console.log('api call done');
 						var i;
 						for(i=0;i<body['data'].length;i++){
+							var publishedMediaDate = Date.parse(body['data'][i]['timestamp']);
+							var diffDate = publishedMediaDate- lastPublishedMediaDate;
+							console.log(diffDate);
+							if(diffDate>0){
 								if(body['data'][i]['media_type']=== "IMAGE" ){
-										var publishedMediaDate = Date.parse(body['data'][i]['timestamp']);
-
-										var diffDate = publishedMediaDate- lastPublishedMediaDate;
-
-										if(diffDate>0){
-											console.log('New data - caption'+body['data'][i]['caption']);
+											console.log('New data IMAGE- caption'+body['data'][i]['caption']);
 											lastPublishedMediaDate = publishedMediaDate;
 											const exampleEmbed = new Discord.MessageEmbed()
 																.setTitle(body['data'][i]['caption'])
-																.setImage(body['data'][i]['media_url']);
-											client.channels.cache.get(process.env.channedID).send(exampleEmbed);//we have to get the channelID for the channel that the bot has been deployed
-											break;////as we don't want to spam on the channel
+																.setImage(body['data'][i]['media_url'])
+																.setURL(body['data'][i]['permalink']);
+											client.channels.cache.get(process.env.channedID).send(exampleEmbed);
+
+								 	}
+									 if (body['data'][i]['media_type']=== "VIDEO") {
+										console.log('New data VIDEO- caption'+body['data'][i]['caption']);
+										lastPublishedMediaDate = publishedMediaDate;
+										const exampleEmbed = new Discord.MessageEmbed()
+															.setTitle(body['data'][i]['caption']+" (Video)")
+															.setImage(body['data'][i]['thumbnail_url'])
+															.setURL(body['data'][i]['permalink']);
+										client.channels.cache.get(process.env.channedID).send(exampleEmbed);
+										break;////as we don't want to spam on the channel
 									}
 								}
 						  }
