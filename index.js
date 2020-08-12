@@ -4,10 +4,10 @@ const Discord = require('discord.js');
 
 const client = new Discord.Client();
 
-const discordBotToken= procees.env.discordBotToken;
+const discordBotToken= process.env.discordBotToken;
 var lastPublishedMediaDate=Date.parse(0);
 
-var accessTokenLongForRefreshing=procees.env.initialInstaLongAccessToken; //it will be used for both refreshing and accessing
+var accessTokenLongForRefreshing=process.env.initialInstaLongAccessToken; //it will be used for both refreshing and accessing
 var accessTokenLongCurrent;
 let setTimerIdRefreshToken;
 
