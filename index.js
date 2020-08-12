@@ -50,26 +50,12 @@ async function startMediaPolling() {
 							var diffDate = publishedMediaDate- lastPublishedMediaDate;
 							console.log(diffDate);
 							if(diffDate>0){
-								if(body['data'][i]['media_type']=== "IMAGE" ){
+								if(body['data'][i]['media_type']=== "IMAGE" || body['data'][i]['media_type']=== "VIDEO"){
 											console.log('New data IMAGE- caption'+body['data'][i]['caption']);
 											lastPublishedMediaDate = publishedMediaDate;
-											const exampleEmbed = new Discord.MessageEmbed()
-																.setTitle(body['data'][i]['caption'])
-																.setImage(body['data'][i]['media_url'])
-																.setURL(body['data'][i]['permalink']);
-											client.channels.cache.get(process.env.channedID).send(exampleEmbed);
+											client.channels.cache.get(process.env.channedID).send(body['data'][i]['permalink']);
 											break;////as we don't want to spam on the channel
 								 	}
-									 if (body['data'][i]['media_type']=== "VIDEO") {
-										console.log('New data VIDEO- caption'+body['data'][i]['caption']);
-										lastPublishedMediaDate = publishedMediaDate;
-										const exampleEmbed = new Discord.MessageEmbed()
-															.setTitle(body['data'][i]['caption']+" (Video)")
-															.setImage(body['data'][i]['thumbnail_url'])
-															.setURL(body['data'][i]['permalink']);
-										client.channels.cache.get(process.env.channedID).send(exampleEmbed);
-										break;////as we don't want to spam on the channel
-									}
 								}
 						  }
 				    }
