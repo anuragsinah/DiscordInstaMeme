@@ -54,7 +54,7 @@ class instaHandleClass{
           console.error('Error in the get call '+ error);
           clearTimeout(that.intervalTimerIdMedia);///stop polling if error occoured
         }
-  	}, 3000);// poll insta in every 30s
+  	}, 300000);// poll insta in every 5min
   }
 
   mediaResponse = (res) => {
