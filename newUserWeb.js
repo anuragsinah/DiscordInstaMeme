@@ -27,8 +27,8 @@ exp.get('/', async (req, res)=>{
 });
 var server = http.createServer(exp);
 
-server.listen('8080',(req, res)=>{
-                    console.log('Server listening in 8080')});
+server.listen(process.env.PORT,(req, res)=>{
+                    console.log('Server listening in '+ process.env.PORT)});
 
 
 function postCallForAccessToken(code){
