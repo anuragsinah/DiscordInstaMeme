@@ -6,10 +6,11 @@ var http = require('http');
 var exp = new express() ;
 var unirest = require('unirest');
 var PORT = process.env.PORT || 5000;
-
+var keepAliveTimeId;
 exp.get('/', async (req, res)=>{
     try{
           console.log("Query for the new user. With query as"+req.query);
+          if(req.query.code != undefined){
           var postCallResponse = await postCallForAccessToken(req.query.code);
           postCallResponse = JSON.parse(postCallResponse);
           var userId = postCallResponse.user_id;
@@ -19,6 +20,10 @@ exp.get('/', async (req, res)=>{
           var fireStoreService = require('./fireStore');
           await fireStoreService.addNewUser(userId,accessTokenLongResponse.access_token)
           res.send('Yay.... We got you. Now your any new post will be shared to the Discord channel. If you are signing up for service for the first time. So, to get started we will be sharing your latest post to the channel. Enjoy!!!!!');
+        }
+        else{
+          res.send('Hello my boi');
+        }
     }
     catch(error){
       console.log(error);
@@ -28,8 +33,25 @@ exp.get('/', async (req, res)=>{
 var server = http.createServer(exp);
 
 server.listen(PORT,(req, res)=>{
-                    console.log('Server listening in '+ PORT)});
+                    console.log('Server listening in '+ PORT);
+                    startKeepAlive();
+                    });
 
+function startKeepAlive(){
+  keepAliveTimeId = setInterval(async function() {
+    console.log("Pinging to herokuapp");
+    var url = 'https://insta-discord.herokuapp.com/';
+    unirest.get(url)
+    .end(function(res) {
+      if (res.error) {
+        console.log('error in pinging') ;
+      }
+      else {
+        console.log("Pinging done with response - "+ res.raw_body);
+     }
+   });
+ }, 60000*10);//keep pinging server in 10 min
+}
 
 function postCallForAccessToken(code){
   console.log('postCallForAccessToken  --');
