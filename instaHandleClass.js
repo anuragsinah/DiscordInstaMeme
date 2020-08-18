@@ -1,11 +1,11 @@
+'use strict';
 var unirest = require('unirest');
 
 /*
  *  For doing the http get call
- *  chat.postEphemeral to the user who used slash command
  */
 const doGetCall = (url) => {
-  console.log("doGetCall- "+url);
+  console.log("doGetCall");
   return new Promise(async (resolve,reject)=>{
      unirest.get(url)
      .end(function(res) {
@@ -21,11 +21,17 @@ const doGetCall = (url) => {
   });
 };
 
+
+
 class instaHandleClass{
   lastPublishedMediaDate=Date.parse(0);
   setTimerIdRefreshToken;
   intervalTimerIdMedia;
-  constructor(client,accessTokenLong) {
+  constructor(userId,client,accessTokenLong,lastPublishedMediaDate) {
+    console.log("New user created with lastPublishedMediaDate as "+ lastPublishedMediaDate);
+    if(lastPublishedMediaDate != undefined){this.lastPublishedMediaDate = lastPublishedMediaDate;}
+    else {this.lastPublishedMediaDate = Date.parse(0);}
+    this.userId=userId
     this.client=client
     this.accessTokenLong = accessTokenLong;
   }
@@ -39,6 +45,9 @@ class instaHandleClass{
     clearTimeout(this.intervalTimerIdMedia);
   }
 
+  getUserId(){
+    return this.userId
+  }
 
   async startMediaPolling() {
 
@@ -54,7 +63,7 @@ class instaHandleClass{
           console.error('Error in the get call '+ error);
           clearTimeout(that.intervalTimerIdMedia);///stop polling if error occoured
         }
-  	}, 300000);// poll insta in every 5min
+  	}, 30000);// poll insta in every 30s
   }
 
   mediaResponse = (res) => {
@@ -62,14 +71,17 @@ class instaHandleClass{
           var body = res['body'];
           console.log('api call done');
           var i;
+          console.log("Last lastPublishedMediaDate for userId "+this.userId +" ,is - "+this.lastPublishedMediaDate);
           for(i=0;i<body['data'].length;i++){
             var publishedMediaDate = Date.parse(body['data'][i]['timestamp']);
             var diffDate = publishedMediaDate- this.lastPublishedMediaDate;
-            console.log(diffDate);
+            //console.log(diffDate);
             if(diffDate>0){
               if(body['data'][i]['media_type']=== "IMAGE" || body['data'][i]['media_type']=== "VIDEO"){
                     console.log('New data IMAGE- caption'+body['data'][i]['caption']);
                     this.lastPublishedMediaDate = publishedMediaDate;
+                    const fireStoreService = require('./fireStore')
+                    fireStoreService.updatelastPublishedMediaDate(this.userId,this.lastPublishedMediaDate);
                     this.client.channels.cache.get(process.env.channedID).send(body['data'][i]['permalink']);
                     break;////as we don't want to spam on the channel
                 }
@@ -90,6 +102,8 @@ class instaHandleClass{
   		var response = await doGetCall(url);
       var expiresIn = response['body']['expires_in'];
       this.accessTokenLong = response['body']['access_token'];
+      const fireStoreService = require('./fireStore')
+      fireStoreService.updateAccessToken(this.userId,this.accessTokenLong);
   		this.startMediaPolling();
   		console.log("New expiry time - "+expiresIn);
   		this.setTimerIdRefreshToken = setTimeout(function() {
@@ -99,6 +113,7 @@ class instaHandleClass{
   								},expiresIn-10000);//refresh it 10 second of expiry
   	}catch(err){
   		console.log("can not start startRefreshTokenPolling");
+      console.log(err);
   	}
   }
 }
