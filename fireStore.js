@@ -31,6 +31,7 @@ function startSnapshortUser(clientBot){
   	db.collection('instaUser').onSnapshot(function(snapshot){
      userData = {};
      snapshot.forEach((doc) => {
+       console.log("New snapshort");
        console.log(doc.id, '=>');
 	     userData[doc.id]=doc.data();
     });
