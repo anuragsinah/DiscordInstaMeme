@@ -5,7 +5,7 @@ const express = require('express') ;
 var http = require('http');
 var exp = new express() ;
 var unirest = require('unirest');
-
+var PORT = process.env.PORT || 5000;
 
 exp.get('/', async (req, res)=>{
     try{
@@ -27,8 +27,8 @@ exp.get('/', async (req, res)=>{
 });
 var server = http.createServer(exp);
 
-server.listen(process.env.PORT,(req, res)=>{
-                    console.log('Server listening in '+ process.env.PORT)});
+server.listen(PORT,(req, res)=>{
+                    console.log('Server listening in '+ PORT)});
 
 
 function postCallForAccessToken(code){
