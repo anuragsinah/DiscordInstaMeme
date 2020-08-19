@@ -81,7 +81,7 @@ class instaHandleClass{
                     console.log('New data IMAGE- caption'+body['data'][i]['caption']);
                     this.lastPublishedMediaDate = publishedMediaDate;
                     const fireStoreService = require('./fireStore')
-                    fireStoreService.updatelastPublishedMediaDate(this.userId,this.lastPublishedMediaDate);
+                    fireStoreService.updatelastPublishedMediaDateAndCaption(this.userId,this.lastPublishedMediaDate,body['data'][i]['caption']);
                     this.client.channels.cache.get(process.env.channedID).send(body['data'][i]['permalink']);
                     break;////as we don't want to spam on the channel
                 }

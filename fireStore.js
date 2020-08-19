@@ -99,10 +99,11 @@ async function updateAccessToken(userId,accessToken){
 	}
 }
 
-async function updatelastPublishedMediaDate(userId,lastPublishedMediaDate){
+async function updatelastPublishedMediaDateAndCaption(userId,lastPublishedMediaDate,caption){
 	try{
     await db.collection('instaUser').doc(userId).set({
-          lastPublishedMediaDate : lastPublishedMediaDate }, { merge: true });
+          lastPublishedMediaDate : lastPublishedMediaDate,
+          caption : caption}, { merge: true });
 	}
 	catch(err){
 		console.error(err);
@@ -124,4 +125,4 @@ async function addNewUser(userId,accessToken){
   });
 }
 
-module.exports = {startSnapshortUser,updateAccessToken,updatelastPublishedMediaDate,addNewUser};
+module.exports = {startSnapshortUser,updateAccessToken,updatelastPublishedMediaDateAndCaption,addNewUser};
