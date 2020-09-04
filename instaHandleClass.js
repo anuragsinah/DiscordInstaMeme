@@ -84,7 +84,14 @@ class instaHandleClass{
                     fireStoreService.updatelastPublishedMediaDateAndCaption(this.userId,this.lastPublishedMediaDate,body['data'][i]['caption']);
                     this.client.channels.cache.get(process.env.channedID).send(body['data'][i]['permalink']);
                     break;////as we don't want to spam on the channel
-                }
+                } else if(body['data'][i]['media_type']=== "VIDEO"){
+                      console.log('New data VIDEO- caption'+body['data'][i]['caption']);
+                      this.lastPublishedMediaDate = publishedMediaDate;
+                      const fireStoreService = require('./fireStore')
+                      fireStoreService.updatelastPublishedMediaDateAndCaption(this.userId,this.lastPublishedMediaDate,body['data'][i]['caption']);
+                      this.client.channels.cache.get(process.env.channedID).send(body['data'][i]['permalink']+"  -Video(Click on the link)");
+                      break;////as we don't want to spam on the channel
+                  }
               }
             }
           }
