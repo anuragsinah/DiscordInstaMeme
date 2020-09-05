@@ -77,7 +77,7 @@ class instaHandleClass{
             var diffDate = publishedMediaDate- this.lastPublishedMediaDate;
             //console.log(diffDate);
             if(diffDate>0){
-              if(body['data'][i]['media_type']=== "IMAGE" || body['data'][i]['media_type']=== "VIDEO"){
+              if(body['data'][i]['media_type']=== "IMAGE"){
                     console.log('New data IMAGE- caption'+body['data'][i]['caption']);
                     this.lastPublishedMediaDate = publishedMediaDate;
                     const fireStoreService = require('./fireStore')
