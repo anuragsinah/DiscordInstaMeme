@@ -7,6 +7,7 @@ var exp = new express() ;
 var unirest = require('unirest');
 var PORT = process.env.PORT || 5000;
 var keepAliveTimeId;
+var keepAliveTimeId1;
 exp.get('/', async (req, res)=>{
     try{
           console.log("Query for the new user. With query as"+req.query);
@@ -35,12 +36,29 @@ var server = http.createServer(exp);
 server.listen(PORT,(req, res)=>{
                     console.log('Server listening in '+ PORT);
                     startKeepAlive();
+                    startKeepAliveForSecond();
                     });
 
 function startKeepAlive(){
   keepAliveTimeId = setInterval(async function() {
     console.log("Pinging to herokuapp");
     var url = 'https://insta-discord.herokuapp.com/';
+    unirest.get(url)
+    .end(function(res) {
+      if (res.error) {
+        console.log('error in pinging') ;
+      }
+      else {
+        console.log("Pinging done with response - "+ res.raw_body);
+     }
+   });
+ }, 60000*10);//keep pinging server in 10 min
+}
+
+function startKeepAliveForSecond(){
+  keepAliveTimeId1 = setInterval(async function() {
+    console.log("Pinging to herokuapp ForSecond");
+    var url = 'https://insta-discord1.herokuapp.com/';
     unirest.get(url)
     .end(function(res) {
       if (res.error) {
