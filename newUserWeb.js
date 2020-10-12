@@ -31,6 +31,21 @@ exp.get('/', async (req, res)=>{
       res.send(error);
     }
 });
+
+exp.get('/.well-known/assetlinks.json', async (req, res)=>{
+  res.writeHead(200, {'Content-Type': 'application/json'})
+  res.write(JSON.stringify([{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.example.android.marsrealestate",
+    "sha256_cert_fingerprints":
+    ["27:D6:DE:42:64:07:8F:39:25:A0:DB:59:CA:30:60:E3:36:41:0A:CF:30:2B:DC:08:55:DE:A6:12:8F:F2:77:5F"]
+  }
+}]))
+res.end();
+});
+
 var server = http.createServer(exp);
 
 server.listen(PORT,(req, res)=>{
