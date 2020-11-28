@@ -21,6 +21,8 @@ client.on('ready',()=>{
 client.on('message',msg=>{
 	console.log('New request');
 
+	var msg = msg.content.toLowerCase();
+
   const PREFIX = '';
 	let args = msg.content.substring(PREFIX.length).split(" ");
 
