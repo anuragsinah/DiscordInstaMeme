@@ -20,7 +20,16 @@ client.on('ready',()=>{
 
 client.on('message',msg=>{
 	console.log('New request');
+
+  const PREFIX = '';
+	let args = msg.content.substring(PREFIX.length).split(" ");
+
 	if(msg.content==='hi'){
 			msg.reply("hello");
+	}
+	if(args[0] == 'ein'){
+		console.log('New message request');
+		console.log(msg.content.substr(msg.content.indexOf(' ')+1));
+		client.channels.cache.get('782310277956763658').send(msg.content.substr(msg.content.indexOf(' ')+1));
 	}
 })
