@@ -18,8 +18,13 @@ client.on('ready',()=>{
 	fireStoreService.startSnapshortUser(client);
 })
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 client.on('message',msg=>{
 	console.log('New request');
+  if(msg.author.bot){return;}
 
   console.log(msg);
   const PREFIX = '';
@@ -29,9 +34,17 @@ client.on('message',msg=>{
 			msg.reply("hello");
 	}
 	args[0] = args[0].toLowerCase();
-	if(args[0] == 'ein'){
+	if(args[0] == 'ein' && args.length>0){
+		var randomInt = getRandomInt(15);
 		console.log('New message request');
-		console.log(msg.content.substr(msg.content.indexOf(' ')+1));
-		client.channels.cache.get('782310277956763658').send(msg.content.substr(msg.content.indexOf(' ')+1));
+		console.log("randomInt "+ randomInt);
+		if(msg.content.indexOf(' ') != -1){
+		  client.channels.cache.get('782310277956763658').send(msg.content.substr(msg.content.indexOf(' ')+1));
+			if(msg.author.id != '737751178233774190' && msg.author.id != '692326717804773416'){
+				if(randomInt == 8){
+					client.channels.cache.get('782310277956763658').send("<@!"+msg.author.id+"> is that you..????");
+				}
+			}
+  	}
 	}
 })
