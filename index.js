@@ -21,15 +21,14 @@ client.on('ready',()=>{
 client.on('message',msg=>{
 	console.log('New request');
 
-	msg.content = msg.content.toLowerCase();
-
-console.log(msg);
+  console.log(msg);
   const PREFIX = '';
 	let args = msg.content.substring(PREFIX.length).split(" ");
 
 	if(msg.content==='hi'){
 			msg.reply("hello");
 	}
+	args[0] = args[0].toLowerCase();
 	if(args[0] == 'ein'){
 		console.log('New message request');
 		console.log(msg.content.substr(msg.content.indexOf(' ')+1));
