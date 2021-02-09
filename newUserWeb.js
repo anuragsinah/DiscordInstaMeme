@@ -8,7 +8,6 @@ var unirest = require('unirest');
 var PORT = process.env.PORT || 5000;
 var keepAliveTimeId;
 var keepAliveTimeId1;
-var keepAliveTimeIdGlitch;
 exp.get('/', async (req, res)=>{
     try{
           console.log("Query for the new user. With query as"+req.query);
@@ -53,7 +52,6 @@ server.listen(PORT,(req, res)=>{
                     console.log('Server listening in '+ PORT);
                     startKeepAlive();
                     startKeepAliveForSecond();
-                    startKeepAliveForGlitch();
                     });
 
 function startKeepAlive(){
@@ -86,23 +84,6 @@ function startKeepAliveForSecond(){
      }
    });
  }, 60000*10);//keep pinging server in 10 min
-}
-
-function startKeepAliveForGlitch(){
-  keepAliveTimeIdGlitch = setInterval(async function() {
-    console.log("Pinging to Glitch");
-    var url = 'https://boulder-steel-lancer.glitch.me/';
-    unirest.get(url)
-    .end(function(res) {
-      if (res.error) {
-        console.log(res.error);
-        console.log('error in pinging glitch') ;
-      }
-      else {
-        console.log("Pinging done to glitch with response - "+ res.raw_body);
-     }
-   });
- }, 60000);//keep pinging server in 10 min
 }
 
 function postCallForAccessToken(code){
