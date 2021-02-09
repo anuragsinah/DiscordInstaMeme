@@ -95,6 +95,7 @@ function startKeepAliveForGlitch(){
     unirest.get(url)
     .end(function(res) {
       if (res.error) {
+        console.log(res.error);
         console.log('error in pinging glitch') ;
       }
       else {
